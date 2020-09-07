@@ -2,12 +2,13 @@
     text-align: center;
 }
 
-
-/* 
 html {
     height: 100%;
+    background-color: #53BFEF;
 }
 
+
+/* 
 body,
 div {
     min-height: 100%;

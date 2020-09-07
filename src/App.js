@@ -36,12 +36,11 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: '50px',
-    // 
   },
   paper: {
-    backgroundColor: theme.palette.background.paper,
+    backgroundColor: 'white',
     padding: theme.spacing(2, 4, 3),
+    borderRadius: '20px',
   },
   modelBtn: {
     color: 'white',
@@ -66,7 +65,10 @@ const useStyles = makeStyles((theme) => ({
     paddingRight: '31px',
     paddingBottom: '22px',
     fontSize: '14px'
-
+  },
+  textField:{
+    paddingBottom: '13px',
+    borderRadius: '20px'
   }
 }));
 
@@ -88,17 +90,17 @@ function App() {
   let achivedGoal = 15;
   let waterGoal = 3.5;
   return (
-    <div style={{ backgroundColor: backGroundColor, height: '100%' }}>
+    <div style={{ backgroundColor: backGroundColor}}>
       <Grid direction="row" justify="center" alignItems="center" container className={classes.root}>
 
         <Grid direction="row" justify="center" alignItems="center" container spacing={5} style={{paddingTop: '51px', paddingBottom: '33Px'}}>
-          <Grid item direction="column" xs={10} sm={6} md={2} container spacing={2}>
+          <Grid item direction="column" xs={5} sm={6} md={2} container spacing={2}>
               <Typography align="center" fontWeight="fontWeightBold" className={classes.typographyStyleNumValues} >{totalWaterDrunk}L
               </Typography>
               <Typography align="center" className={classes.typographyStyle} >TOTAL WATER DRUNK</Typography>
           </Grid>
 
-          <Grid item direction="column" xs={10} sm={6} md={2} container  spacing={2}>
+          <Grid item direction="column" xs={5} sm={6} md={2} container  spacing={2}>
               <Typography align="center" className={classes.typographyStyleNumValues} >{achivedGoal}</Typography>
               <Typography align="center" className={classes.typographyStyle} >ACHIEVED GOAL
                 DAYS</Typography>
@@ -108,13 +110,13 @@ function App() {
         <Grid>
           <Button onClick={handleOpen}>
             <Typography fontWeight="fontWeightBold" className={classes.typographyStyleBold} >{waterGoal}L
-          <Create style={{ fontSize: 10 }} />
+          <Create style={{ fontSize: 15 }} />
             </Typography>
           </Button>
           <br></br>
 
-          <img src={HollowMan} alt="HollowMan" />
-          <Typography fontWeight="fontWeightBold" className={classes.typographyStyleBold} > Nice work! Keep it up!</Typography>
+          <img src={HollowMan} alt="HollowMan" height=""/>
+          <Typography fontWeight="fontWeightBold" align="center" className={classes.typographyStyleBold} > Nice work! Keep it up!</Typography>
           <Typography> val carosole</Typography>
         </Grid>
         <Grid container justify="center" spacing={spacing}>
@@ -153,13 +155,16 @@ function App() {
                   <Typography className={classes.modalText}>Please enter your new water target below:</Typography>
                 </Grid>
                 <Grid item xs={12} sm={12}>
-                  <TextField id="outlined-basic" variant="outlined" />
+                  <TextField className={classes.textField}  id="outlined-basic" variant="outlined"/>
 
                 </Grid>
                 <Grid item xs={12} sm={12}>
                   <Button className={classes.modelBtn} variant="contained">UPDATE</Button>
                 </Grid>
 
+                {/* <transactionModal
+                    openModal={this.openModal}
+                /> */}
               </div>
             </Grid>
           </Fade>
