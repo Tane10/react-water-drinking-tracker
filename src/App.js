@@ -3,6 +3,7 @@ import './App.css'
 import { Grid, makeStyles, Button, Container, Typography, Modal, TextField } from '@material-ui/core';
 import { backGroundColor } from "./colors.js";
 import HollowMan from "./images/man_svg.svg";
+import ImageMask from "./images/IMG_MAN_MASK.svg";
 import Jeff from "./images/jeff.png";
 import Center from "react-center";
 import { Create } from '@material-ui/icons';
@@ -120,22 +121,16 @@ function App()  {
           <br></br>
 
          
-          <div style={{
+          {/* <div style={{
             backgroundColor: "red",
-            height: '250px',
-            width: '150px',
-            WebkitMaskImage: `url(${HollowMan})`,
+            height: '200px',
+            width: '100px',
+            WebkitMaskImage: `url(${HollowMan})` ,
             maskImage: `url(${HollowMan})`,
-            maskSize: '30px'
+            // maskSize: '30px'
 
-          }} > test
-          {/* <img src={Jeff} alt="HollowMan" height="" style={{mask}}/> */}
-          {/* <img src={HollowMan} alt="HollowMan" height=""/> */}
-         
-            </div>
-
-
-
+          }} > test */}
+          <img src={HollowMan} alt="HollowMan" height="" style={{WebkitMaskImage: `url(${ImageMask})`,maskImage: `url(${ImageMask})`, backgroundColor: "#4E96D3",}}/>
           <Typography fontWeight="fontWeightBold" align="center" className={classes.typographyStyleBold} > Nice work! Keep it up!</Typography>
           <Typography> val carosole</Typography>
           <UpdateWaterVoumeBtn />
