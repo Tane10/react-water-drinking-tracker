@@ -3,13 +3,11 @@ import './App.css'
 import { Grid, makeStyles, Button, Container, Typography, Modal, TextField } from '@material-ui/core';
 import { backGroundColor } from "./colors.js";
 import HollowMan from "./images/WaterMan_hollow.png";
-import MinusBtn from "./images/minus_btn.svg";
-import PlusBtb from "./images/plus_btn.svg";
 import Center from "react-center";
 import { Create } from '@material-ui/icons';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
-
+import UpdateWaterVoumeBtn from "./components/updateWaterVoumeBtn";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -119,14 +117,7 @@ function App() {
           <Typography fontWeight="fontWeightBold" align="center" className={classes.typographyStyleBold} > Nice work! Keep it up!</Typography>
           <Typography> val carosole</Typography>
         </Grid>
-        <Grid container justify="center" spacing={spacing}>
-          <Button>
-            <img src={MinusBtn} alt="minusBtn" />
-          </Button>
-          <Button>
-            <img src={PlusBtb} alt="plusBtn" />
-          </Button>
-        </Grid>
+        <UpdateWaterVoumeBtn />
       </Grid>
       <div>
         <Modal
