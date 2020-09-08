@@ -2,12 +2,14 @@ import React from 'react';
 import './App.css'
 import { Grid, makeStyles, Button, Container, Typography, Modal, TextField } from '@material-ui/core';
 import { backGroundColor } from "./colors.js";
-import HollowMan from "./images/WaterMan_hollow.png";
+import HollowMan from "./images/man_svg.svg";
+import Jeff from "./images/jeff.png";
 import Center from "react-center";
 import { Create } from '@material-ui/icons';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 import UpdateWaterVoumeBtn from "./components/updateWaterVoumeBtn";
+import EditWaterGoalModal from "./components/model/EditWaterGoalModal";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -71,19 +73,23 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-function App() {
+function App()  {
 
   const classes = useStyles();
-  const [open, setOpen] = React.useState(false);
 
-  const handleOpen = () => {
-    setOpen(true);
-  };
 
-  const handleClose = () => {
-    setOpen(false);
-  };
-  const [spacing, setSpacing] = React.useState(2);
+
+
+  // const [open, setOpen] = React.useState(false);
+
+  // const handleOpen = () => {
+  //   setOpen(true);
+  // };
+
+  // const handleClose = () => {
+  //   setOpen(false);
+  // };
+  // const [spacing, setSpacing] = React.useState(2);
   let totalWaterDrunk = 2.5;
   let achivedGoal = 15;
   let waterGoal = 3.5;
@@ -106,63 +112,36 @@ function App() {
         </Grid>
 
         <Grid>
-          <Button onClick={handleOpen}>
+          <Button>
             <Typography fontWeight="fontWeightBold" className={classes.typographyStyleBold} >{waterGoal}L
           <Create style={{ fontSize: 15 }} />
             </Typography>
           </Button>
           <br></br>
 
-          <img src={HollowMan} alt="HollowMan" height=""/>
+         
+          <div style={{
+            backgroundColor: "red",
+            height: '250px',
+            width: '150px',
+            WebkitMaskImage: `url(${HollowMan})`,
+            maskImage: `url(${HollowMan})`,
+            maskSize: '30px'
+
+          }} > test
+          {/* <img src={Jeff} alt="HollowMan" height="" style={{mask}}/> */}
+          {/* <img src={HollowMan} alt="HollowMan" height=""/> */}
+         
+            </div>
+
+
+
           <Typography fontWeight="fontWeightBold" align="center" className={classes.typographyStyleBold} > Nice work! Keep it up!</Typography>
           <Typography> val carosole</Typography>
+          <UpdateWaterVoumeBtn />
         </Grid>
-        <UpdateWaterVoumeBtn />
       </Grid>
-      <div>
-        <Modal
-          aria-labelledby="transition-modal-title"
-          aria-describedby="transition-modal-description"
-          className={classes.modal}
-          open={open}
-          onClose={handleClose}
-          closeAfterTransition
-          BackdropComponent={Backdrop}
-          BackdropProps={{
-            timeout: 500,
-          }}
-        >
-          <Fade in={open} style={{
-            width: '261px',
-            height: '282px'
-          }}>
-            <Grid justify="center" container direction="column" style={{ justifyContent: 'center' }}>
-
-              <div className={classes.paper} >
-                <Grid item xs={12} sm={12}>
-                  <Typography className={classes.modalTiltle} >Update Target Water</Typography>
-                </Grid>
-                <Grid item xs={12} sm={12}>
-                  <Typography className={classes.modalText}>Please enter your new water target below:</Typography>
-                </Grid>
-                <Grid item xs={12} sm={12}>
-                  <TextField className={classes.textField}  id="outlined-basic" variant="outlined"/>
-
-                </Grid>
-                <Grid item xs={12} sm={12}>
-                  <Button className={classes.modelBtn} variant="contained">UPDATE</Button>
-                </Grid>
-
-                {/* <transactionModal
-                    openModal={this.openModal}
-                /> */}
-              </div>
-            </Grid>
-          </Fade>
-        </Modal>
-      </div>
     </div>
-
   );
 }
 

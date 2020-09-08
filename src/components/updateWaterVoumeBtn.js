@@ -6,8 +6,6 @@ import { Grid, Button } from '@material-ui/core';
 
 
 export default class UpdateWaterVoumeBtn extends React.Component {
-
-
     state = {
         volume: 0
     };
@@ -49,6 +47,7 @@ export default class UpdateWaterVoumeBtn extends React.Component {
     }
 
 }
+
 
 
 
