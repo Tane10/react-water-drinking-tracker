@@ -130,7 +130,16 @@ function App()  {
             // maskSize: '30px'
 
           }} > test */}
-          <img src={HollowMan} alt="HollowMan" height="" style={{WebkitMaskImage: `url(${ImageMask})`,maskImage: `url(${ImageMask})`, backgroundColor: "#4E96D3",}}/>
+          <img src={HollowMan} alt="HollowMan" height="" 
+          style={{
+          WebkitMaskImage: `url(${ImageMask})`,
+          maskImage: `url(${ImageMask})`, 
+          backgroundColor: "#4E96D3", 
+          maskSize: 'auto',
+          WebkitMaskSize: 'auto',
+          maskRepeat: "no-repeat",
+          WebkitMaskRepeat: "no-repeat"}}/>
+
           <Typography fontWeight="fontWeightBold" align="center" className={classes.typographyStyleBold} > Nice work! Keep it up!</Typography>
           <Typography> val carosole</Typography>
           <UpdateWaterVoumeBtn />
