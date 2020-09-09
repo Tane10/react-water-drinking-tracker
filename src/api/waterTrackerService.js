@@ -6,7 +6,7 @@ const baseUrl = "https://fndt05814i.execute-api.us-east-2.amazonaws.com/dev/";
 
 const getWaterDrunkByUser = async(email) => {
     await axios.get(`${baseUrl}?userEmail=${email}`).then((res) => {
-        console.log(res)
+        return res.data
     }).catch(err => {
         console.log(err)
     })
