@@ -1,24 +1,14 @@
 import React from 'react';
 import './App.css'
-import { Grid, makeStyles, Button, Typography, } from '@material-ui/core';
+import { Grid, Button, Typography, } from '@material-ui/core';
 import HollowMan from "./images/man_svg.svg";
 import ImageMask from "./images/IMG_MAN_MASK.svg";
 import { Create } from '@material-ui/icons';
-import UpdateWaterVoumeBtn from "./components/updateWaterVoumeBtn";
 import EditWaterGoalModal from "./components/modal/EditWaterGoalModal";
 import { appUseStyles } from "./useStyles"
 import { backGroundColor } from "./colors.js";
-import { getWaterDrunkByUser } from './api/waterTrackerService'
 import axios from "axios";
 import SideScrollWaterValues from "./components/sideScrollWaterValues"
-
-
-const waterVolmueAmounts = [
-  { id: 1, name: '150 ml' },
-  { id: 2, name: '250 ml' },
-  { id: 3, name: '350 ml' },
-  { id: 4, name: '450 ml' },
-];
 
 export default function App() {
   const classes = appUseStyles();

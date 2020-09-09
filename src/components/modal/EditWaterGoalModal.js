@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, Grid, Typography, TextField, Button, FormControl, IconButton, InputAdornment } from '@material-ui/core';
+import { Modal, Grid, Typography, TextField, Button, IconButton, InputAdornment } from '@material-ui/core';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 import { Close } from "@material-ui/icons"
@@ -28,6 +28,8 @@ export default function EditWaterGoalModal({ openModal, closeModal }) {
         }).catch(err => {
             console.log(err)
         })
+
+        closeModal();
 
     }
 

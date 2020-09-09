@@ -46,14 +46,10 @@ function a11yProps(index) {
     };
 }
 
-
 export default function ScrollableTabsButtonAuto({ updateWaterValues, validation }) {
-
-
     const classes = tabUseStyles();
     const [value, setValue] = React.useState(0);
     const [waterAmount, setWaterAmount] = React.useState(150);
-    // const [invalid, setinvalid] = React.useState()
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -84,8 +80,6 @@ export default function ScrollableTabsButtonAuto({ updateWaterValues, validation
         })
 
         updateWaterValues();
-
-
     }
 
     return (
@@ -112,15 +106,11 @@ export default function ScrollableTabsButtonAuto({ updateWaterValues, validation
                     </IconButton>
                 </Grid>
                 <Grid item xs={2} sm={1} md={1}>
-                    <IconButton classes={{ root: classes.iconButtons }} aria-label="remove" value='remove' color="primary" 
-                    onClick={ () => { 
-                        if(((validation * 1000) - waterAmount ) > 0){
-                            updateTotalWaterDrunk()
-                        }
-                    }}>
+                    <IconButton classes={{ root: classes.iconButtons }} aria-label="remove" value='remove' color="primary"
+                        onClick={(e) => { if (((validation * 1000) - waterAmount) > 0) { updateTotalWaterDrunk(e) } }}>
                         <Remove />
                     </IconButton>
-            </Grid>
+                </Grid>
             </Grid>
         </div >
     );
