@@ -10,6 +10,7 @@ import { appUseStyles } from "./useStyles"
 import { backGroundColor } from "./colors.js";
 import { getWaterDrunkByUser } from './api/waterTrackerService'
 import axios from "axios";
+import SideScrollWaterValues from "./components/sideScrollWaterValues"
 
 
 const waterVolmueAmounts = [
@@ -23,22 +24,17 @@ export default function App() {
   const classes = appUseStyles();
 
   const [open, setOpen] = React.useState(false);
+  const [refreshWaterInfo, setRefreshWaterInfo] = React.useState(false);
   const [totalWaterDrunk, setTotalWaterDrunk] = React.useState(0);
   const [achivedGoal, setAchivedGoal] = React.useState(0);
   const [waterGoal, setwaterGoal] = React.useState(0);
 
   React.useEffect(() => {
-
     const getWaterDrunkByUser = async (email) => {
-      const water = await axios.get(`https://fndt05814i.execute-api.us-east-2.amazonaws.com/dev/?userEmail=${email}`).then((res) => {
+      const water = await axios.get(`https://fndt05814i.execute-api.us-east-2.amazonaws.com/dev/user/?userEmail=${email}`).then((res) => {
         const waterInfo = res.data.body;
-
-        if(waterInfo.totalWaterDrunkML > 1000){
-          waterInfo.totalWaterDrunkML = waterInfo.totalWaterDrunkML / 1000
-        }
-        if(waterInfo.waterGoalML > 1000){
-          waterInfo.waterGoalML = waterInfo.waterGoalML / 1000
-        }
+        waterInfo.totalWaterDrunkML = waterInfo.totalWaterDrunkML / 1000
+        waterInfo.waterGoalML = waterInfo.waterGoalML / 1000
 
         return waterInfo
       }).catch(err => {
@@ -48,14 +44,15 @@ export default function App() {
       setTotalWaterDrunk(water.totalWaterDrunkML);
       setAchivedGoal(water.daysGoalAchived);
       setwaterGoal(water.waterGoalML);
+      setRefreshWaterInfo(false)
     }
     getWaterDrunkByUser('testJoe@test.com');;
 
   }, [totalWaterDrunk,
     achivedGoal,
-    waterGoal])
-
-
+    waterGoal,
+    open,
+    refreshWaterInfo])
 
   const handleOpen = () => {
     setOpen(true);
@@ -65,9 +62,9 @@ export default function App() {
     setOpen(false);
   };
 
-  // let totalWaterDrunk = 2.5;
-  // let achivedGoal = 15;
-  // let waterGoal = 3.5;
+  const refreshWaterInfoCall = () => {
+    setRefreshWaterInfo(true);
+  }
 
   return (
     <div style={{ backgroundColor: backGroundColor }}>
@@ -109,20 +106,12 @@ export default function App() {
 
           <Grid container justify="center" alignItems="center" >
             <Typography fontWeight="fontWeightBold" align="center" className={classes.typographyStyleBold} > Nice work! Keep it up!</Typography>
-            <Grid container justify="center" alignItems="center" >
-              {waterVolmueAmounts.map(item =>
-                <Grid item xs={3} sm={2} md={1} >
-                  <Button style={{
-                    color: "white",
-                    paddingTop: '13px',
-                    paddingBottom: '13px',
-                    fontWeight: "bold",
-                  }} key={item.id}>{item.name} </Button>
-                </Grid>)}
-            </Grid>
           </Grid>
-
-          <UpdateWaterVoumeBtn />
+          <SideScrollWaterValues
+          updateWaterValues={refreshWaterInfoCall}
+          validation={totalWaterDrunk}
+          />
+          {/* <UpdateWaterVoumeBtn /> */}
           <EditWaterGoalModal
             openModal={open}
             closeModal={handleClose} />
@@ -131,6 +120,5 @@ export default function App() {
     </div>
   );
 }
-
 
 

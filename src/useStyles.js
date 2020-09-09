@@ -63,6 +63,33 @@ const appUseStyles = makeStyles((theme) => ({
     }
 }));
 
+const tabUseStyles = makeStyles(() => ({
+    indicator: {
+        background: "transparent"
+    },
+    tabText: {
+        fontWeight: 'bold'
+    },
+    root: {
+        flexGrow: 1,
+        width: '100%',
+        justifyContent: 'center',
+        justifySelf: 'center',
+        alignContent: 'center',
+        alignItems: 'center'
+    },
+    iconButtons: {
+        border: '2px',
+        borderStyle: 'solid',
+        borderColor: 'white',
+        color: 'white',
+        borderRadius: '100px',
+
+    }
+
+
+}));
+
 const modalUseStyles = makeStyles((theme) => ({
     modal: {
         display: 'flex',
@@ -109,4 +136,4 @@ const modalUseStyles = makeStyles((theme) => ({
 
 }));
 
-export { appUseStyles, modalUseStyles }
+export { appUseStyles, modalUseStyles, tabUseStyles }

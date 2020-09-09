@@ -5,14 +5,15 @@ const dynamoDB = new AWS.DynamoDB({
 
 exports.handler = async(event, context, callback) => {
 
-    if (event.email === undefined && event.volume === undefined) {
+    if (event.email === undefined && event.volume === undefined && event.operator === undefined) {
         callback("400 Invalid Input");
     }
 
     const waterVolume = event.volume;
     const emailParam = event.email;
+    const op = event.operator;
 
-    await updateTotalDrunkWater(emailParam, waterVolume).then((data) => {
+    await updateTotalDrunkWater(emailParam, waterVolume, op).then((data) => {
         callback(null, {
             statusCode: 200,
             body: "updated item"
@@ -20,7 +21,7 @@ exports.handler = async(event, context, callback) => {
     }).catch((err) => console.error(err))
 }
 
-async function updateTotalDrunkWater(email, volume) {
+async function updateTotalDrunkWater(email, volume, op) {
 
     const getWaterGoal = (async(email) => {
         const params = {
@@ -38,7 +39,13 @@ async function updateTotalDrunkWater(email, volume) {
 
     const formatedUserWaterGoal = AWS.DynamoDB.Converter.unmarshall(userWaterGoal.Item);
 
-    const newVolume = formatedUserWaterGoal.totalWaterDrunkML + volume;
+    if (op === "add") {
+        const newVolume = formatedUserWaterGoal.totalWaterDrunkML + volume;
+    }
+
+    if (op === "remove") {
+        const newVolume = formatedUserWaterGoal.totalWaterDrunkML - volume;
+    }
 
     const params = {
         TableName: "waterAmounts",
@@ -57,6 +64,4 @@ async function updateTotalDrunkWater(email, volume) {
 
     console.log("Updating the water...");
     return await dynamoDB.updateItem(params).promise();
-
-
 }
