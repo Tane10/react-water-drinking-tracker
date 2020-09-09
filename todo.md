@@ -6,11 +6,10 @@ done:
 - use model to update total water goal
 
 next:
+- write API in a cloud formation script
 
 
 
 todo:
-- write API in a cloud formation script
 - make image fill with water
-- add item carose at the bottom
-- clean up code
+- clean up code 
