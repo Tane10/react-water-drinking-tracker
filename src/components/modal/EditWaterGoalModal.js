@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, Grid, Typography, TextField, Button, makeStyles, IconButton} from '@material-ui/core';
+import { Modal, Grid, Typography, TextField, Button, makeStyles, IconButton,InputAdornment  } from '@material-ui/core';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 import { Close } from "@material-ui/icons"
@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme) => ({
         borderRadius: '20px'
     },
     cross: {
-        justify: "rigth", 
+        justify: "rigth",
         alignItems: "right"
     }
 
@@ -71,8 +71,8 @@ export default function EditWaterGoalModal({ openModal, closeModal }) {
                         <div className={classes.paper} >
 
                             <IconButton aria-label="close" onClick={closeModal}>
-                                    <Close style={{ color: '#62BFEF' }} />
-                            </IconButton>                            
+                                <Close style={{ color: '#62BFEF' }} />
+                            </IconButton>
 
                             <Grid item xs={12} sm={12} >
                                 <Typography className={classes.modalTiltle}> Update Target Water </Typography>
@@ -83,7 +83,20 @@ export default function EditWaterGoalModal({ openModal, closeModal }) {
                             <Grid item xs={12} sm={12} >
                                 <TextField
                                     className={classes.textField}
-                                    id="outlined-basic" variant="outlined" />
+                                    id="outlined-basic" variant="outlined"
+                                    InputProps={{
+                                        endAdornment: (
+                                            <InputAdornment position="end">
+                                                <Typography className={classes.modalText} > ML</Typography>
+                                            </InputAdornment>
+                                        ),
+                                    }}
+                                />
+                                {/* <TextField
+                                    className={classes.textField}
+                                    id="outlined-basic" variant="outlined" >
+                                        words
+                                        </TextField> */}
                             </Grid>
                             <Grid item xs={12} sm={12} >
                                 <Button

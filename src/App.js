@@ -1,13 +1,13 @@
 import React from 'react';
 import './App.css'
 import { Grid, makeStyles, Button, Typography,  } from '@material-ui/core';
-import { backGroundColor } from "./colors.js";
 import HollowMan from "./images/man_svg.svg";
 import ImageMask from "./images/IMG_MAN_MASK.svg";
 import { Create } from '@material-ui/icons';
 import UpdateWaterVoumeBtn from "./components/updateWaterVoumeBtn";
 import EditWaterGoalModal from "./components/modal/EditWaterGoalModal";
-
+import {useStyles} from "./app.style"
+import { backGroundColor } from "./colors.js";
 
 const waterVolmueAmounts = [
   { id: 1, name: '150 ml' },
@@ -16,73 +16,8 @@ const waterVolmueAmounts = [
   { id: 4, name: '450 ml' },
 ];
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
-    backgroundColor: backGroundColor
-  },
-  control: {
-    padding: theme.spacing(2),
-  },
-  typographyStyle: {
-    color: "white"
-  },
-  typographyStyleBold: {
-    color: "white",
-    fontWeight: "bold"
-
-  },
-  typographyStyleNumValues: {
-    color: "white",
-    fontWeight: "bold",
-    fontSize: '40px'
-  },
-  modal: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  paper: {
-    backgroundColor: 'white',
-    padding: theme.spacing(2, 4, 3),
-    borderRadius: '20px',
-  },
-  modelBtn: {
-    color: 'white',
-    backgroundColor: '#62BFEF',
-    fontWeight: 'bold',
-    paddingLeft: '32px',
-    paddingRight: '31px',
-  },
-  modalTiltle: {
-    color: '#62BFEF',
-    fontWeight: 'bold',
-    // paddingTop: '34px',
-    paddingLeft: '25px',
-    paddingRight: '25px',
-    // paddingBottom: '32px',
-    fontSize: '22px'
-  },
-  modalText: {
-    color: '#62BFEF',
-    paddingTop: '32px',
-    paddingLeft: '32px',
-    paddingRight: '31px',
-    paddingBottom: '22px',
-    fontSize: '14px'
-  },
-  textField: {
-    paddingBottom: '13px',
-    borderRadius: '20px'
-  }
-}));
-
-
-
-
 export default function App() {
   const classes = useStyles();
-
 
   const [open, setOpen] = React.useState(false);
 
@@ -124,16 +59,6 @@ export default function App() {
               </Typography>
             </Button>
 
-
-            {/* <div style={{
-            backgroundColor: "red",
-            height: '200px',
-            width: '100px',
-            WebkitMaskImage: `url(${HollowMan})` ,
-            maskImage: `url(${HollowMan})`,
-            // maskSize: '30px'
-
-          }} > test */}
             <img src={HollowMan} alt="HollowMan" height=""
               style={{
                 WebkitMaskImage: `url(${ImageMask})`,
@@ -162,7 +87,7 @@ export default function App() {
 
           <UpdateWaterVoumeBtn />
           <EditWaterGoalModal 
-          openModal={open}
+          openModal={true}
           closeModal={handleClose}/>
         </Grid>
       </Grid>
