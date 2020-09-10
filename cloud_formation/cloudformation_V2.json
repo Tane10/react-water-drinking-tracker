@@ -1,7 +1,8 @@
 {
     "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "This will set up our api, as well as its stages",
     "Resources": {
-        "PlayersAPI": {
+        "GenFlowTest": {
             "Type": "AWS::ApiGateway::RestApi",
             "DeletionPolicy": "Delete",
             "Properties": {
@@ -472,7 +473,17 @@
 
                 }
             }
+        },
+        "ApiDeployment": {
+            "DeletionPolicy": "Delete",
+            "Type": "AWS::ApiGateway::Deployment",
+            "Properties": {
+                "RestApiId": {
+                    "Ref": "GenFlowTest"
+                },
+                "Description": "Test deployment",
+                "StageName": "Dev"
+            }
         }
-
     }
 }
