@@ -1,6 +1,24 @@
 {
     "AWSTemplateFormatVersion": "2010-09-09",
     "Description": "This will set up our api, as well as its stages",
+    "Parameters": {
+        "S3Bucketname": {
+            "Type": "String",
+            "Default": "cf-templates-9p0zxzlcytx5-us-east-2"
+        },
+        "GetWaterDrunkRole": {
+            "Type": "String",
+            "Default": "arn:aws:iam::005865507601:role/service-role/GetWaterDrunkByUser-role-kqx82o37"
+        },
+        "UpdateUserWaterDrunk": {
+            "Type": "String",
+            "Default": "arn:aws:iam::005865507601:role/service-role/GetWaterDrunkByUser-role-kqx82o37"
+        },
+        "UpdateWaterGoalTotal": {
+            "Type": "String",
+            "Default": "arn:aws:iam::005865507601:role/service-role/UpdateWaterGoalTotal-role-c3v4pwqe"
+        }
+    },
     "Resources": {
         "GenFlowTest": {
             "Type": "AWS::ApiGateway::RestApi",
@@ -483,6 +501,54 @@
                 },
                 "Description": "Test deployment",
                 "StageName": "Dev"
+            }
+        },
+        "GetWaterDrunkLambda": {
+            "Type": "AWS::Lambda::Function",
+            "DeletionPolicy": "Delete",
+            "Properties": {
+                "Code": {
+                    "S3Bucket": "cf-templates-9p0zxzlcytx5-us-east-2",
+                    "S3Key": "GetWaterDrunkByUser.zip"
+                },
+                "FunctionName": "GetWaterDrunkByUser_2",
+                "Description": "Get water drunk info about a user",
+                "Handler": "index.handler",
+                "Runtime": "nodejs12.x",
+                "Timeout": 5,
+                "Role": "arn:aws:iam::005865507601:role/service-role/GetWaterDrunkByUser-role-kqx82o37"
+            }
+        },
+        "UpdateUserWaterDrunkLambda": {
+            "Type": "AWS::Lambda::Function",
+            "DeletionPolicy": "Delete",
+            "Properties": {
+                "Code": {
+                    "S3Bucket": "cf-templates-9p0zxzlcytx5-us-east-2",
+                    "S3Key": "UpdateUserWaterDrunk.zip"
+                },
+                "FunctionName": "UpdateUserWaterDrunk_2",
+                "Description": "Update water drunk info about a user",
+                "Handler": "index.handler",
+                "Runtime": "nodejs12.x",
+                "Timeout": 5,
+                "Role": "arn:aws:iam::005865507601:role/service-role/GetWaterDrunkByUser-role-kqx82o37"
+            }
+        },
+        "UpdateWaterGoalTotalLambda": {
+            "Type": "AWS::Lambda::Function",
+            "DeletionPolicy": "Delete",
+            "Properties": {
+                "Code": {
+                    "S3Bucket": "cf-templates-9p0zxzlcytx5-us-east-2",
+                    "S3Key": "UpdateWaterGoalTotal.zip"
+                },
+                "FunctionName": "UpdateWaterGoalTotal_2",
+                "Description": "Get total water goal info about a user",
+                "Handler": "index.handler",
+                "Runtime": "nodejs12.x",
+                "Timeout": 5,
+                "Role": "arn:aws:iam::005865507601:role/service-role/UpdateWaterGoalTotal-role-c3v4pwqe"
             }
         }
     }
