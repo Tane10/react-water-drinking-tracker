@@ -1,31 +1,168 @@
 {
     "AWSTemplateFormatVersion": "2010-09-09",
     "Description": "This will set up our api, as well as its stages",
-    "Parameters": {
-        "S3Bucketname": {
-            "Type": "String",
-            "Default": "cf-templates-9p0zxzlcytx5-us-east-2"
-        },
-        "GetWaterDrunkRole": {
-            "Type": "String",
-            "Default": "arn:aws:iam::005865507601:role/service-role/GetWaterDrunkByUser-role-kqx82o37"
-        },
-        "UpdateUserWaterDrunk": {
-            "Type": "String",
-            "Default": "arn:aws:iam::005865507601:role/service-role/GetWaterDrunkByUser-role-kqx82o37"
-        },
-        "UpdateWaterGoalTotal": {
-            "Type": "String",
-            "Default": "arn:aws:iam::005865507601:role/service-role/UpdateWaterGoalTotal-role-c3v4pwqe"
-        }
-    },
     "Resources": {
-        "GenFlowTest": {
+        "IAMLambdaServiceRole": {
+            "DeletionPolicy": "Delete",
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+                "RoleName": "LambdaServiceRole",
+                "AssumeRolePolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [{
+                        "Sid": "",
+                        "Effect": "Allow",
+                        "Principal": {
+                            "Service": "lambda.amazonaws.com"
+                        },
+                        "Action": "sts:AssumeRole"
+                    }]
+                },
+                "ManagedPolicyArns": ["arn:aws:iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs"],
+                "Policies": [{
+                    "PolicyName": "LambdaServiceRolePolicy",
+                    "PolicyDocument": {
+                        "Version": "2012-10-17",
+                        "Statement": [{
+                            "Sid": "VisualEditor0",
+                            "Effect": "Allow",
+                            "Action": [
+                                "dynamodb:BatchGetItem",
+                                "dynamodb:ConditionCheckItem",
+                                "dynamodb:DescribeContributorInsights",
+                                "dynamodb:Scan",
+                                "dynamodb:ListTagsOfResource",
+                                "dynamodb:Query",
+                                "dynamodb:DescribeStream",
+                                "dynamodb:DescribeTimeToLive",
+                                "dynamodb:ListStreams",
+                                "dynamodb:DescribeGlobalTableSettings",
+                                "dynamodb:DescribeReservedCapacityOfferings",
+                                "dynamodb:DescribeTable",
+                                "dynamodb:GetShardIterator",
+                                "dynamodb:DescribeGlobalTable",
+                                "dynamodb:DescribeReservedCapacity",
+                                "dynamodb:GetItem",
+                                "dynamodb:DescribeContinuousBackups",
+                                "dynamodb:DescribeBackup",
+                                "dynamodb:DescribeLimits",
+                                "dynamodb:GetRecords",
+                                "dynamodb:DescribeTableReplicaAutoScaling"
+                            ],
+                            "Resource": "*"
+                        }]
+                    }
+                }]
+            }
+        },
+        "IAMAPIServiceRole": {
+            "Type": "AWS::IAM::Role",
+            "DeletionPolicy": "Delete",
+            "Properties": {
+                "RoleName": "LambdaAPIServiceRole",
+                "AssumeRolePolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [{
+                        "Sid": "",
+                        "Effect": "Allow",
+                        "Principal": {
+                            "Service": "apigateway.amazonaws.com"
+                        },
+                        "Action": "sts:AssumeRole"
+                    }]
+                },
+                "ManagedPolicyArns": ["arn:aws:iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs"],
+                "Policies": [{
+                        "PolicyName": "API_Service_Role_Policy_GetWaterDrunkLambda",
+                        "PolicyDocument": {
+                            "Version": "2012-10-17",
+                            "Statement": [{
+                                "Action": "lambda:InvokeFunction",
+                                "Resource": { "Fn::GetAtt": ["GetWaterDrunkLambda", "Arn"] },
+                                "Effect": "Allow"
+                            }]
+                        }
+                    },
+                    {
+                        "PolicyName": "API_Service_Role_Policy_UpdateUserWaterDrunkLambda",
+                        "PolicyDocument": {
+                            "Version": "2012-10-17",
+                            "Statement": [{
+                                "Action": "lambda:InvokeFunction",
+                                "Resource": { "Fn::GetAtt": ["UpdateUserWaterDrunkLambda", "Arn"] },
+                                "Effect": "Allow"
+                            }]
+                        }
+                    },
+                    {
+                        "PolicyName": "API_Service_Role_Policy_UpdateWaterGoalTotalLambda",
+                        "PolicyDocument": {
+                            "Version": "2012-10-17",
+                            "Statement": [{
+                                "Action": "lambda:InvokeFunction",
+                                "Resource": { "Fn::GetAtt": ["UpdateWaterGoalTotalLambda", "Arn"] },
+                                "Effect": "Allow"
+                            }]
+                        }
+                    }
+
+                ]
+            }
+        },
+        "GetWaterDrunkLambda": {
+            "Type": "AWS::Lambda::Function",
+            "DeletionPolicy": "Delete",
+            "Properties": {
+                "Code": {
+                    "S3Bucket": "cf-templates-9p0zxzlcytx5-us-east-2",
+                    "S3Key": "GetWaterDrunkByUser.zip"
+                },
+                "FunctionName": "GetWaterDrunkByUser_2",
+                "Description": "Get water drunk info about a user",
+                "Handler": "index.handler",
+                "Runtime": "nodejs12.x",
+                "Timeout": 5,
+                "Role": { "Fn::GetAtt": ["IAMLambdaServiceRole", "Arn"] }
+            }
+        },
+        "UpdateUserWaterDrunkLambda": {
+            "Type": "AWS::Lambda::Function",
+            "DeletionPolicy": "Delete",
+            "Properties": {
+                "Code": {
+                    "S3Bucket": "cf-templates-9p0zxzlcytx5-us-east-2",
+                    "S3Key": "UpdateUserWaterDrunk.zip"
+                },
+                "FunctionName": "UpdateUserWaterDrunk_2",
+                "Description": "Update water drunk info about a user",
+                "Handler": "index.handler",
+                "Runtime": "nodejs12.x",
+                "Timeout": 5,
+                "Role": { "Fn::GetAtt": ["IAMLambdaServiceRole", "Arn"] }
+            }
+        },
+        "UpdateWaterGoalTotalLambda": {
+            "Type": "AWS::Lambda::Function",
+            "DeletionPolicy": "Delete",
+            "Properties": {
+                "Code": {
+                    "S3Bucket": "cf-templates-9p0zxzlcytx5-us-east-2",
+                    "S3Key": "UpdateWaterGoalTotal.zip"
+                },
+                "FunctionName": "UpdateWaterGoalTotal_2",
+                "Description": "Get total water goal info about a user",
+                "Handler": "index.handler",
+                "Runtime": "nodejs12.x",
+                "Timeout": 5,
+                "Role": { "Fn::GetAtt": ["IAMLambdaServiceRole", "Arn"] }
+            }
+        },
+        "GenFlowTestAPI": {
             "Type": "AWS::ApiGateway::RestApi",
             "DeletionPolicy": "Delete",
             "Properties": {
-                "Name": "Player API",
-                "Description": "A demo API for Player management",
+                "Name": "CloudFormation-WaterTracker",
+                "Description": "A CloudFormation Build script to set up the water tracker API",
                 "Body": {
                     "swagger": "2.0",
                     "info": {
@@ -39,171 +176,6 @@
                         "https"
                     ],
                     "paths": {
-                        "/": {
-                            "get": {
-                                "consumes": [
-                                    "application/json"
-                                ],
-                                "produces": [
-                                    "application/json"
-                                ],
-                                "parameters": [{
-                                    "name": "userEmail",
-                                    "in": "query",
-                                    "required": true,
-                                    "type": "string"
-                                }],
-                                "responses": {
-                                    "200": {
-                                        "description": "200 response",
-                                        "schema": {
-                                            "$ref": "#/definitions/Empty"
-                                        },
-                                        "headers": {
-                                            "Access-Control-Allow-Origin": {
-                                                "type": "string"
-                                            },
-                                            "Access-Control-Allow-Methods": {
-                                                "type": "string"
-                                            },
-                                            "Access-Control-Allow-Credentials": {
-                                                "type": "string"
-                                            },
-                                            "Access-Control-Allow-Headers": {
-                                                "type": "string"
-                                            }
-                                        }
-                                    }
-                                },
-                                "x-amazon-apigateway-request-validator": "Validate query string parameters and headers",
-                                "x-amazon-apigateway-integration": {
-                                    "uri": "arn:aws:apigateway:us-east-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-2:005865507601:function:GetWaterDrunkByUser/invocations",
-                                    "responses": {
-                                        "default": {
-                                            "statusCode": "200",
-                                            "responseParameters": {
-                                                "method.response.header.Access-Control-Allow-Credentials": "'true'",
-                                                "method.response.header.Access-Control-Allow-Methods": "'GET'",
-                                                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
-                                                "method.response.header.Access-Control-Allow-Origin": "'*'"
-                                            }
-                                        }
-                                    },
-                                    "requestTemplates": {
-                                        "application/json": "{\n    \"email\": \"$input.params('userEmail')\"\n}\n"
-                                    },
-                                    "passthroughBehavior": "when_no_templates",
-                                    "httpMethod": "POST",
-                                    "contentHandling": "CONVERT_TO_TEXT",
-                                    "type": "aws"
-                                }
-                            },
-                            "put": {
-                                "consumes": [
-                                    "application/json"
-                                ],
-                                "produces": [
-                                    "application/json"
-                                ],
-                                "parameters": [{
-                                    "in": "body",
-                                    "name": "Input",
-                                    "required": true,
-                                    "schema": {
-                                        "$ref": "#/definitions/Input"
-                                    }
-                                }],
-                                "responses": {
-                                    "200": {
-                                        "description": "200 response",
-                                        "schema": {
-                                            "$ref": "#/definitions/Empty"
-                                        },
-                                        "headers": {
-                                            "Access-Control-Allow-Origin": {
-                                                "type": "string"
-                                            },
-                                            "Access-Control-Allow-Methods": {
-                                                "type": "string"
-                                            },
-                                            "Access-Control-Allow-Credentials": {
-                                                "type": "string"
-                                            },
-                                            "Access-Control-Allow-Headers": {
-                                                "type": "string"
-                                            }
-                                        }
-                                    }
-                                },
-                                "x-amazon-apigateway-request-validator": "Validate body",
-                                "x-amazon-apigateway-integration": {
-                                    "uri": "arn:aws:apigateway:us-east-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-2:005865507601:function:UpdateUserWaterDrunk/invocations",
-                                    "responses": {
-                                        "default": {
-                                            "statusCode": "200",
-                                            "responseParameters": {
-                                                "method.response.header.Access-Control-Allow-Credentials": "'true'",
-                                                "method.response.header.Access-Control-Allow-Methods": "'PUT'",
-                                                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
-                                                "method.response.header.Access-Control-Allow-Origin": "'*'"
-                                            }
-                                        }
-                                    },
-                                    "passthroughBehavior": "when_no_match",
-                                    "httpMethod": "POST",
-                                    "contentHandling": "CONVERT_TO_TEXT",
-                                    "type": "aws"
-                                }
-                            },
-                            "options": {
-                                "consumes": [
-                                    "application/json"
-                                ],
-                                "produces": [
-                                    "application/json"
-                                ],
-                                "responses": {
-                                    "200": {
-                                        "description": "200 response",
-                                        "schema": {
-                                            "$ref": "#/definitions/Empty"
-                                        },
-                                        "headers": {
-                                            "Access-Control-Allow-Origin": {
-                                                "type": "string"
-                                            },
-                                            "Access-Control-Allow-Methods": {
-                                                "type": "string"
-                                            },
-                                            "Access-Control-Allow-Credentials": {
-                                                "type": "string"
-                                            },
-                                            "Access-Control-Allow-Headers": {
-                                                "type": "string"
-                                            }
-                                        }
-                                    }
-                                },
-                                "x-amazon-apigateway-integration": {
-                                    "responses": {
-                                        "default": {
-                                            "statusCode": "200",
-                                            "responseParameters": {
-                                                "method.response.header.Access-Control-Allow-Credentials": "'true'",
-                                                "method.response.header.Access-Control-Allow-Methods": "'GET,OPTIONS,POST,PUT'",
-                                                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
-                                                "method.response.header.Access-Control-Allow-Origin": "'*'"
-                                            }
-                                        }
-                                    },
-                                    "requestTemplates": {
-                                        "application/json": "{\"statusCode\": 200}"
-                                    },
-                                    "passthroughBehavior": "when_no_match",
-                                    "type": "mock"
-                                }
-                            }
-                        },
                         "/user": {
                             "get": {
                                 "consumes": [
@@ -242,7 +214,7 @@
                                 },
                                 "x-amazon-apigateway-request-validator": "Validate query string parameters and headers",
                                 "x-amazon-apigateway-integration": {
-                                    "uri": "arn:aws:apigateway:us-east-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-2:005865507601:function:GetWaterDrunkByUser/invocations",
+                                    "uri": "arn:aws:apigateway:us-east-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-2:005865507601:function:GetWaterDrunkByUser_2/invocations",
                                     "responses": {
                                         "default": {
                                             "statusCode": "200",
@@ -347,7 +319,7 @@
                                 },
                                 "x-amazon-apigateway-request-validator": "Validate body",
                                 "x-amazon-apigateway-integration": {
-                                    "uri": "arn:aws:apigateway:us-east-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-2:005865507601:function:UpdateWaterGoalTotal/invocations",
+                                    "uri": "arn:aws:apigateway:us-east-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-2:005865507601:function:UpdateWaterGoalTotal_2/invocations",
                                     "responses": {
                                         "default": {
                                             "statusCode": "200",
@@ -450,7 +422,7 @@
                                 },
                                 "x-amazon-apigateway-request-validator": "Validate body",
                                 "x-amazon-apigateway-integration": {
-                                    "uri": "arn:aws:apigateway:us-east-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-2:005865507601:function:UpdateUserWaterDrunk/invocations",
+                                    "uri": "arn:aws:apigateway:us-east-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-2:005865507601:function:UpdateUserWaterDrunk_2/invocations",
                                     "responses": {
                                         "default": {
                                             "statusCode": "200",
@@ -545,66 +517,183 @@
                             "validateRequestBody": false
                         }
                     }
+                },
+                "Parameters": {
+                    "endpointConfigurationTypes": "REGIONAL"
                 }
             }
         },
-        "ApiDeployment": {
+        "RestAPICaller": {
             "DeletionPolicy": "Delete",
+            "Type": "AWS::IAM::User",
+            "Properties": {
+                "UserName": "API_Caller"
+            }
+        },
+        "RestAPICallerManagedPolicy": {
+            "DeletionPolicy": "Delete",
+            "Type": "AWS::IAM::ManagedPolicy",
+            "DependsOn": ["GenFlowTestAPI", "GetWaterDrunkLambda", "UpdateUserWaterDrunkLambda", "UpdateWaterGoalTotalLambda", "RestAPICaller"],
+            "Properties": {
+                "Description": "Get_Car API Caller",
+                "PolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [{
+                            "Sid": "RestAPICaller001",
+                            "Effect": "Allow",
+                            "Action": "execute-api:Invoke",
+                            "Resource": { "Fn::Join": ["", ["arn:aws:execute-api:", { "Ref": "AWS::Region" }, ":", { "Ref": "AWS::AccountId" }, ":", { "Ref": "GenFlowTestAPI" }, "/*/GET/*"]] }
+                        },
+                        {
+                            "Sid": "RestAPICaller002",
+                            "Effect": "Allow",
+                            "Action": "execute-api:Invoke",
+                            "Resource": { "Fn::Join": ["", ["arn:aws:execute-api:", { "Ref": "AWS::Region" }, ":", { "Ref": "AWS::AccountId" }, ":", { "Ref": "GenFlowTestAPI" }, "/*/PUT/*"]] }
+                        },
+                        {
+                            "Sid": "RestAPICaller003",
+                            "Effect": "Allow",
+                            "Action": "lambda:InvokeFunction",
+                            "Resource": { "Fn::Join": ["", ["arn:aws:lambda:", { "Ref": "AWS::Region" }, ":", { "Ref": "AWS::AccountId" }, ":function:", { "Ref": "GetWaterDrunkLambda" }]] }
+                        },
+                        {
+                            "Sid": "RestAPICaller004",
+                            "Effect": "Allow",
+                            "Action": "lambda:InvokeFunction",
+                            "Resource": { "Fn::Join": ["", ["arn:aws:lambda:", { "Ref": "AWS::Region" }, ":", { "Ref": "AWS::AccountId" }, ":function:", { "Ref": "UpdateUserWaterDrunkLambda" }]] }
+                        },
+                        {
+                            "Sid": "RestAPICaller005",
+                            "Effect": "Allow",
+                            "Action": "lambda:InvokeFunction",
+                            "Resource": { "Fn::Join": ["", ["arn:aws:lambda:", { "Ref": "AWS::Region" }, ":", { "Ref": "AWS::AccountId" }, ":function:", { "Ref": "UpdateWaterGoalTotalLambda" }]] }
+                        }
+                    ]
+                },
+                "Users": ["API_Caller"],
+                "ManagedPolicyName": "API_Caller_Policy"
+            }
+        },
+        "GetWaterDrunkLambdaPermissions": {
+            "Type": "AWS::Lambda::Permission",
+            "DeletionPolicy": "Delete",
+            "DependsOn": ["GetWaterDrunkLambda"],
+            "Properties": {
+                "Action": "lambda:InvokeFunction",
+                "FunctionName": { "Ref": "GetWaterDrunkLambda" },
+                "Principal": "apigateway.amazonaws.com",
+                "SourceArn": { "Fn::Join": ["", ["arn:aws:execute-api:", { "Ref": "AWS::Region" }, ":", { "Ref": "AWS::AccountId" }, ":", { "Ref": "GenFlowTestAPI" }, "/*/GET/user"]] }
+            }
+        },
+        "UpdateUserWaterDrunkLambdaPermissions": {
+            "Type": "AWS::Lambda::Permission",
+            "DeletionPolicy": "Delete",
+            "DependsOn": ["UpdateUserWaterDrunkLambda"],
+            "Properties": {
+                "Action": "lambda:InvokeFunction",
+                "FunctionName": { "Ref": "UpdateUserWaterDrunkLambda" },
+                "Principal": "apigateway.amazonaws.com",
+                "SourceArn": { "Fn::Join": ["", ["arn:aws:execute-api:", { "Ref": "AWS::Region" }, ":", { "Ref": "AWS::AccountId" }, ":", { "Ref": "GenFlowTestAPI" }, "/*/PUT/user/update-water-total"]] }
+            }
+        },
+        "UpdateWaterGoalTotalLambdaPermissions": {
+            "Type": "AWS::Lambda::Permission",
+            "DeletionPolicy": "Delete",
+            "DependsOn": ["UpdateWaterGoalTotalLambda"],
+            "Properties": {
+                "Action": "lambda:InvokeFunction",
+                "FunctionName": { "Ref": "UpdateWaterGoalTotalLambda" },
+                "Principal": "apigateway.amazonaws.com",
+                "SourceArn": { "Fn::Join": ["", ["arn:aws:execute-api:", { "Ref": "AWS::Region" }, ":", { "Ref": "AWS::AccountId" }, ":", { "Ref": "GenFlowTestAPI" }, "/*/PUT/user/update-water-goal"]] }
+            }
+        },
+        "GetWaterDrunkLogGroup": {
+            "DeletionPolicy": "Delete",
+            "Type": "AWS::Logs::LogGroup",
+            "DependsOn": "GetWaterDrunkLambda",
+            "Properties": {
+                "LogGroupName": { "Fn::Join": ["", ["/aws/lambda/", { "Ref": "GetWaterDrunkLambda" }]] }
+            }
+        },
+        "UpdateUserWaterDrunkLogGroup": {
+            "DeletionPolicy": "Delete",
+            "Type": "AWS::Logs::LogGroup",
+            "DependsOn": "UpdateUserWaterDrunkLambda",
+            "Properties": {
+                "LogGroupName": { "Fn::Join": ["", ["/aws/lambda/", { "Ref": "UpdateUserWaterDrunkLambda" }]] }
+            }
+        },
+        "UpdateWaterGoalTotalLogGroup": {
+            "DeletionPolicy": "Delete",
+            "Type": "AWS::Logs::LogGroup",
+            "DependsOn": "UpdateWaterGoalTotalLambda",
+            "Properties": {
+                "LogGroupName": { "Fn::Join": ["", ["/aws/lambda/", { "Ref": "UpdateWaterGoalTotalLambda" }]] }
+            }
+        },
+        "ApiGatewayCloudWatchLogsRole": {
+            "DeletionPolicy": "Delete",
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+                "AssumeRolePolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [{
+                        "Effect": "Allow",
+                        "Principal": { "Service": ["apigateway.amazonaws.com"] },
+                        "Action": ["sts:AssumeRole"]
+                    }]
+                },
+                "Policies": [{
+                    "PolicyName": "API_GW_Logs_Policy",
+                    "PolicyDocument": {
+                        "Version": "2012-10-17",
+                        "Statement": [{
+                            "Effect": "Allow",
+                            "Action": [
+                                "logs:CreateLogGroup",
+                                "logs:CreateLogStream",
+                                "logs:DescribeLogGroups",
+                                "logs:DescribeLogStreams",
+                                "logs:PutLogEvents",
+                                "logs:GetLogEvents",
+                                "logs:FilterLogEvents"
+                            ],
+                            "Resource": "*"
+                        }]
+                    }
+                }]
+            }
+        },
+        "ApiGatewayAccount": {
+            "Type": "AWS::ApiGateway::Account",
+            "DeletionPolicy": "Delete",
+            "Properties": {
+                "CloudWatchRoleArn": { "Fn::GetAtt": ["ApiGatewayCloudWatchLogsRole", "Arn"] }
+            }
+        },
+        "RestAPIStage": {
+            "Type": "AWS::ApiGateway::Stage",
+            "DeletionPolicy": "Delete",
+            "DependsOn": ["ApiGatewayAccount"],
+            "Properties": {
+                "DeploymentId": { "Ref": "RestAPIDeployment" },
+                "MethodSettings": [{
+                    "DataTraceEnabled": true,
+                    "HttpMethod": "*",
+                    "LoggingLevel": "INFO",
+                    "ResourcePath": "/*"
+                }],
+                "RestApiId": { "Ref": "GenFlowTestAPI" },
+                "StageName": "dev"
+            }
+        },
+        "RestAPIDeployment": {
             "Type": "AWS::ApiGateway::Deployment",
-            "Properties": {
-                "RestApiId": {
-                    "Ref": "GenFlowTest"
-                },
-                "Description": "Test deployment",
-                "StageName": "Dev"
-            }
-        },
-        "GetWaterDrunkLambda": {
-            "Type": "AWS::Lambda::Function",
             "DeletionPolicy": "Delete",
+            "DependsOn": ["GenFlowTestAPI"],
             "Properties": {
-                "Code": {
-                    "S3Bucket": "cf-templates-9p0zxzlcytx5-us-east-2",
-                    "S3Key": "GetWaterDrunkByUser.zip"
-                },
-                "FunctionName": "GetWaterDrunkByUser_2",
-                "Description": "Get water drunk info about a user",
-                "Handler": "index.handler",
-                "Runtime": "nodejs12.x",
-                "Timeout": 5,
-                "Role": "arn:aws:iam::005865507601:role/service-role/GetWaterDrunkByUser-role-kqx82o37"
-            }
-        },
-        "UpdateUserWaterDrunkLambda": {
-            "Type": "AWS::Lambda::Function",
-            "DeletionPolicy": "Delete",
-            "Properties": {
-                "Code": {
-                    "S3Bucket": "cf-templates-9p0zxzlcytx5-us-east-2",
-                    "S3Key": "UpdateUserWaterDrunk.zip"
-                },
-                "FunctionName": "UpdateUserWaterDrunk_2",
-                "Description": "Update water drunk info about a user",
-                "Handler": "index.handler",
-                "Runtime": "nodejs12.x",
-                "Timeout": 5,
-                "Role": "arn:aws:iam::005865507601:role/service-role/GetWaterDrunkByUser-role-kqx82o37"
-            }
-        },
-        "UpdateWaterGoalTotalLambda": {
-            "Type": "AWS::Lambda::Function",
-            "DeletionPolicy": "Delete",
-            "Properties": {
-                "Code": {
-                    "S3Bucket": "cf-templates-9p0zxzlcytx5-us-east-2",
-                    "S3Key": "UpdateWaterGoalTotal.zip"
-                },
-                "FunctionName": "UpdateWaterGoalTotal_2",
-                "Description": "Get total water goal info about a user",
-                "Handler": "index.handler",
-                "Runtime": "nodejs12.x",
-                "Timeout": 5,
-                "Role": "arn:aws:iam::005865507601:role/service-role/UpdateWaterGoalTotal-role-c3v4pwqe"
+                "RestApiId": { "Ref": "GenFlowTestAPI" },
+                "StageName": "stage"
             }
         }
     }

@@ -1,7 +1,6 @@
 import { makeStyles } from '@material-ui/core';
 import { backGroundColor } from "./colors.js";
 
-
 const appUseStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,

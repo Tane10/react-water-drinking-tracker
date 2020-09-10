@@ -3,11 +3,9 @@ import { Modal, Grid, Typography, TextField, Button, IconButton, InputAdornment 
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 import { Close } from "@material-ui/icons"
-import { modalUseStyles } from "../../useStyles"
+import { modalUseStyles } from "../useStyles"
 import axios from "axios";
 import { useForm } from "react-hook-form";
-
-
 
 export default function EditWaterGoalModal({ openModal, closeModal }) {
     const classes = modalUseStyles();
