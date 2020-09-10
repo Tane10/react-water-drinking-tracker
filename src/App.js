@@ -1,8 +1,7 @@
 import React from 'react';
 import './styles/App.css'
 import { Grid, Button, Typography, } from '@material-ui/core';
-import HollowMan from "./images/man_svg.svg";
-import ImageMask from "./images/IMG_MAN_MASK.svg";
+import {FillingMan} from "./components/fillingMan";
 import { Create } from '@material-ui/icons';
 import EditWaterGoalModal from "./components/EditWaterGoalModal";
 import { appUseStyles , backGroundColor} from "./styles/useStyles"
@@ -17,6 +16,7 @@ export default function App() {
   const [totalWaterDrunk, setTotalWaterDrunk] = React.useState(0);
   const [achivedGoal, setAchivedGoal] = React.useState(0);
   const [waterGoal, setwaterGoal] = React.useState(0);
+  const [fillAmount, setFillAmount] = React.useState(0);
 
   React.useEffect(() => {
     const getWaterDrunkByUser = async (email) => {
@@ -24,6 +24,11 @@ export default function App() {
         const waterInfo = res.data.body;
         waterInfo.totalWaterDrunkML = waterInfo.totalWaterDrunkML / 1000
         waterInfo.waterGoalML = waterInfo.waterGoalML / 1000
+
+        const fillPercent = (waterInfo.totalWaterDrunkML / waterInfo.waterGoalML) * 100
+        if(fillPercent < 100) {
+          setFillAmount(100 -fillPercent)
+        }
 
         return waterInfo
       }).catch(err => {
@@ -41,7 +46,8 @@ export default function App() {
     achivedGoal,
     waterGoal,
     open,
-    refreshWaterInfo])
+    refreshWaterInfo,
+    fillAmount])
 
   const handleOpen = () => {
     setOpen(true);
@@ -80,17 +86,7 @@ export default function App() {
           <Create style={{ fontSize: 15 }} />
               </Typography>
             </Button>
-
-            <img src={HollowMan} alt="HollowMan" height=""
-              style={{
-                WebkitMaskImage: `url(${ImageMask})`,
-                maskImage: `url(${ImageMask})`,
-                backgroundColor: "#4E96D3",
-                maskSize: 'auto',
-                WebkitMaskSize: 'auto',
-                maskRepeat: "no-repeat",
-                WebkitMaskRepeat: "no-repeat"
-              }} />
+            <FillingMan howFull={fillAmount}/>
           </Grid>
 
           <Grid container justify="center" alignItems="center" >
