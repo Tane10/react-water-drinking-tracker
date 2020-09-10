@@ -1,12 +1,11 @@
 import React from 'react';
-import './App.css'
+import './styles/App.css'
 import { Grid, Button, Typography, } from '@material-ui/core';
 import HollowMan from "./images/man_svg.svg";
 import ImageMask from "./images/IMG_MAN_MASK.svg";
 import { Create } from '@material-ui/icons';
-import EditWaterGoalModal from "./components/modal/EditWaterGoalModal";
-import { appUseStyles } from "./useStyles"
-import { backGroundColor } from "./colors.js";
+import EditWaterGoalModal from "./components/EditWaterGoalModal";
+import { appUseStyles , backGroundColor} from "./styles/useStyles"
 import axios from "axios";
 import SideScrollWaterValues from "./components/sideScrollWaterValues"
 
@@ -21,7 +20,7 @@ export default function App() {
 
   React.useEffect(() => {
     const getWaterDrunkByUser = async (email) => {
-      const water = await axios.get(`https://fndt05814i.execute-api.us-east-2.amazonaws.com/dev/user/?userEmail=${email}`).then((res) => {
+      const water = await axios.get(`${process.env.REACT_APP_GET_USER_URL}${email}`).then((res) => {
         const waterInfo = res.data.body;
         waterInfo.totalWaterDrunkML = waterInfo.totalWaterDrunkML / 1000
         waterInfo.waterGoalML = waterInfo.waterGoalML / 1000
@@ -36,7 +35,7 @@ export default function App() {
       setwaterGoal(water.waterGoalML);
       setRefreshWaterInfo(false)
     }
-    getWaterDrunkByUser('testJoe@test.com');;
+    getWaterDrunkByUser('testJoe@test.com');
 
   }, [totalWaterDrunk,
     achivedGoal,

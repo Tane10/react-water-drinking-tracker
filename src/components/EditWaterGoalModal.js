@@ -3,7 +3,7 @@ import { Modal, Grid, Typography, TextField, Button, IconButton, InputAdornment 
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 import { Close } from "@material-ui/icons"
-import { modalUseStyles } from "../useStyles"
+import { modalUseStyles } from "../styles/useStyles"
 import axios from "axios";
 import { useForm } from "react-hook-form";
 
@@ -20,13 +20,13 @@ export default function EditWaterGoalModal({ openModal, closeModal }) {
             waterGoal: parseInt(val.NewWaterGoal)
         };
 
-        await axios.put("https://fndt05814i.execute-api.us-east-2.amazonaws.com/dev/user/update-water-goal", data
+        await axios.put(process.env.REACT_APP_UPDATE_WATER_GOAL_URL, data
         ).then(res => {
             console.log(res)
         }).catch(err => {
             console.log(err)
         })
-
+       
         closeModal();
 
     }

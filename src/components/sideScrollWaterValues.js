@@ -1,6 +1,6 @@
 import React from 'react';
 import { Typography, AppBar, Tabs, Tab, Grid, IconButton } from '@material-ui/core';
-import { tabUseStyles } from "../useStyles";
+import { tabUseStyles } from "../styles/useStyles";
 import PropTypes from 'prop-types';
 import Box from '@material-ui/core/Box';
 import { Add, Remove } from '@material-ui/icons';
@@ -65,7 +65,7 @@ export default function ScrollableTabsButtonAuto({ updateWaterValues, validation
 
         const operator = e.currentTarget.value;
 
-        const url = "https://fndt05814i.execute-api.us-east-2.amazonaws.com/dev/user/update-water-total";
+        const url = process.env.REACT_APP_UPDATE_WATER_TOTAL_URL;
 
         let data = {
             email: 'testJoe@test.com',
@@ -74,7 +74,7 @@ export default function ScrollableTabsButtonAuto({ updateWaterValues, validation
         };
 
         await axios.put(url, JSON.stringify(data)).then(res => {
-            console.log(res)
+            return res.status
         }).catch(err => {
             console.log(err)
         })

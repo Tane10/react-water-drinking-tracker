@@ -18,7 +18,7 @@
                         "Action": "sts:AssumeRole"
                     }]
                 },
-                "ManagedPolicyArns": ["arn:aws:iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs"],
+                "ManagedPolicyArns": ["arn:aws:iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs", "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess"],
                 "Policies": [{
                     "PolicyName": "LambdaServiceRolePolicy",
                     "PolicyDocument": {
@@ -494,15 +494,10 @@
                         "Input": {
                             "type": "object",
                             "properties": {
-                                "email": {
-                                    "type": "string"
-                                },
-                                "volume": {
-                                    "type": "number"
-                                },
-                                "totalWater": {
-                                    "type": "number"
-                                }
+                                "email": { "type": "string" },
+                                "volume": { "type": "number" },
+                                "totalWater": { "type": "number" },
+                                "operator": { "type": "string" }
                             },
                             "title": "Input"
                         }

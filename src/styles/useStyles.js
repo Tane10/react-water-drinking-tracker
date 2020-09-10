@@ -1,5 +1,4 @@
 import { makeStyles } from '@material-ui/core';
-import { backGroundColor } from "./colors.js";
 
 const appUseStyles = makeStyles((theme) => ({
     root: {
@@ -135,4 +134,13 @@ const modalUseStyles = makeStyles((theme) => ({
 
 }));
 
-export { appUseStyles, modalUseStyles, tabUseStyles }
+const backGroundColor = '#53BFEF';
+const waterFillColor = '#088ECF'
+
+export {
+    appUseStyles,
+    modalUseStyles,
+    tabUseStyles,
+    backGroundColor,
+    waterFillColor
+}
